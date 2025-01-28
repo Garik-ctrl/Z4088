@@ -268,11 +268,11 @@ print(cisla)
 #tisknutí listu
 print(cisla[0:6])
 print(cisla[::-1]) # tisknutí listu od konce
-print(cisla[::-2])
+print(cisla[::-2]) # každý druhý prvek od konce
 print(cisla)
-print(cisla[::2])
-print(cisla[1::2])
-print(cisla[1:10:2])
+print(cisla[::2]) # každý druhý prvek od začátku
+print(cisla[1::2]) # každý druhý prvek od indexu 1
+print(cisla[1:10:2]) # každý druhý prvek od indexu 1 do indexu 10 (bez 10)
 
 """
 Příklad 7
