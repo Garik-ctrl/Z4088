@@ -11,7 +11,7 @@ from traceback import print_tb
 
 
 """
-1.řádek
+1. řádek
 2. řádek 
 3. řádek
 datové typy
@@ -48,7 +48,7 @@ cislo2="3"
 print(cislo1, type(cislo1))
 print(cislo2, type(cislo2))
 
-#Datový typ Boolean - 1/0 True/False
+#Datový typ Boolean - True/False
 
 Boolean=False
 print(Boolean, type(Boolean))
@@ -165,9 +165,9 @@ elif znamka==2:
     print("Chvalitebně")
 elif znamka==3:
     print("Dobře")
-elif znamka==4
+elif znamka==4:
     print("Dostatečně")
-elif znamka==5
+elif znamka==5:
     print("Nedostatečně")
 else:
     print("Taková známka neexistuje")
@@ -266,6 +266,7 @@ cisla[5]=111
 print(cisla)
 
 #tisknutí listu
+# cisla[a:b:c], kde a je start, b je konec (bez b), c je skok
 print(cisla[0:6])
 print(cisla[::-1]) # tisknutí listu od konce
 print(cisla[::-2]) # každý druhý prvek od konce
