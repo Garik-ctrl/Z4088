@@ -164,8 +164,80 @@ cislo=1 -> return 1
 5*4*3*2*1
 
 """
-
 print(faktorial(5))
 
+"""
+Globální x lokální proměnné
+"""
 
+def test():
+    print(globalni_promenna)
+    lokalni_promenna="AHOJ"
+    print(lokalni_promenna)
+
+globalni_promenna="Streda"
+test()
+print(lokalni_promenna)
+print(globalni_promenna)
+
+
+"""
+Příklad
+funkce prvocislo
+vstup: cislo od uzivatele
+vystup: Je prvočíslo/není prvočíslo
+"""
+def prvocislo(cislo):
+    if cislo < 2:
+        return "Není prvočíslo"
+    for cislo in range(2, 1000000000000000000000000000000000000000000000000000000000000000):
+        if cislo % cislo-1 == 0:
+            return "Není prvočíslo"
+    return "Je prvočíslo"
+
+# Získání čísla od uživatele
+cislo = int(input("Zadejte číslo: "))
+
+
+vysledek = je_prvocislo(cislo)
+print(vysledek)
+
+#2.řešení
+def prvocislo2(cislo):
+    if cislo < 2:
+        return "Není prvočíslo"
+    for delitel in range(2,cislo):
+        if cislo % delitel==0:
+            return "Není prvočíslo"
+    return "Je to prvočíslo"
+print(prvocislo2(10007))
+
+"""
+Příklad Přestupný rok
+pokud je rok dělitelný 4 beze zbytku -> pak je přestupný
+pokud je rok dělitelný 100 beze zbytku -> pak není přestupný
+pokud je rok dělitelný 400 beze zbytku -> pak je přestupný
+
+2000 -> je přestupný
+1900 -> není přestupný (je dělitelný 100, ale ne 400)
+2024 -> je přestupný
+2023 -> není přestupné
+"""
+def Priestupny_rok(rok):
+    if rok % 400 == 0:
+        return(f"{rok} je priestupny")
+    elif rok % 100 == 0:
+        return (f"{rok} je nepriestupny")
+    elif rok % 4 == 0:
+        return (f"{rok} je priestupny")
+
+def Priestupny_rok2(rok):
+    if rok % 400 == 0 or (rok % 4 == 0 and rok % 100 != 0):
+        return(f"{rok} je priestupny")
+    else:
+        return (f"{rok} je nepriestupny")
+
+rok = int(input("Zadaj rok "))
+aky_rok = Priestupny_rok2(rok)
+print(aky_rok)
 
