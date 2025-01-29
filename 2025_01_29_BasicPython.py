@@ -80,4 +80,92 @@ osoba2=[{
 }
 ]
 print(osoba2[1]["jmeno"])
+"""
+Příklad 2 Počet slov a výskyt
+vstup: věta
+výstupu: slovo:počet
+
+Vstup: Pes pes pes kocka kocka
+Výstup: 
+pes:3
+kocka:2
+"""
+
+text="Pes pes pes kocka kocka zvire pes"
+slova=text.lower().split() #rozděluje text podle daného rozdělovače
+slovnik={}
+for slovo in slova:
+    if slovo in slovnik:
+        slovnik[slovo]+=1
+    else:
+        slovnik[slovo] = 1
+
+for klic,hodnota in slovnik.items():
+    print(f"{klic}:{hodnota}")
+
+"""
+Funkce 
+def nazev_funkce(paramtery):
+    Telo funkce
+    return vysledek
+"""
+
+def soucet(a, b):
+    return a + b
+
+print(soucet(5, 55))
+
+def soucin(a,b):
+    c=1
+    mezi_vysledek=a*b*c
+    return mezi_vysledek
+vysledek=soucin(3,5)
+print(vysledek)
+
+"""
+Příklad
+funkce: aritmetický průměr ze tří čísel
+"""
+def priemer(a,b,c):
+    return round(((a+b+c)/3),2)
+
+print(priemer(5, 8, 4))
+
+def kalkulacka(a,b):
+    # Altgr+Q - nový řádek \n
+    return print(f"Součet těchto čísel je {soucet(a,b)}.\nSoučin těchto čísel je {soucin(a,b)}.")
+
+kalkulacka(5,3)
+
+def priemer2(a,b,c=0,d=100): #nepovinný argument c
+    return round(((a+b+c)/3),2)
+
+print(priemer2(5, 8))
+
+import math
+
+print(math.factorial(5)) #5*4*3*2*1
+
+#rekurzivní funkce
+def faktorial(cislo):
+    if cislo<0:
+        return "neděl nulou"
+    else:
+        if cislo==1 or cislo==0:
+            return 1
+        else:
+            return cislo*faktorial(cislo-1)
+"""
+cislo=5 -> return 5*faktorial(4) -> 5*faktorial(4)*faktorial(3)*faktorial(2)*faktorial(1)
+cislo=4 -> return 4*faktorial(3)
+cislo=3 -> return 3*faktorial(2)
+cislo=2 -> return 2*faktorial(1)
+cislo=1 -> return 1
+5*4*3*2*1
+
+"""
+
+print(faktorial(5))
+
+
 
