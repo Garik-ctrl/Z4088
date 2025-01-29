@@ -28,7 +28,6 @@ FOR projdi něco IN něčem:
     dělej něco
 """
 
-
 mesta=["Praha","Brno","Ostrava"]
 
 for mesto in mesta:
@@ -198,8 +197,8 @@ print(muj_tuple)
 
 import math
 
-print(math.sqrt(100))
-print(math.gcd(100,50))
+print(math.sqrt(100))                 #odmocnina
+print(math.gcd(100,50))       #největší společný dělitel
 print(math.factorial(5))
 
 import random as rn
