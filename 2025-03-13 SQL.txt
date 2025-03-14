@@ -1,0 +1,110 @@
+/* vytvoření tabulky */
+CREATE TABLE World.Product(
+    id INTEGER,
+    Name VARCHAR(20),
+    Producer VARCHAR(25)
+ );
+ 
+/* zobrazení sloupců v tabulce */
+show columns FROM world.Product;
+
+/* přidání sloupce do existující tabulky */
+Alter Table World.Product ADD Prum_Mzda float;
+
+/* vymazání tabulky */
+Drop Table World.Product;
+
+/* vložení dat do tabulky */
+INSERT INTO World.Product (Id, Producer) 
+VALUES 
+(5, 'Late 2023'),
+(8, 'Late 2045');
+/*--------------------------------------------------------------- */
+
+/* 1) Vytvoření databáze za podmínky, že již není vytvořena */
+Create database if not exists Z4088;
+
+/* 2) Vytvoření  tabulky studenti s parametry */
+Create Table Z4088.studenti(
+	id INT auto_increment,
+    	krestni_jmeno Varchar(20) NOT NULL,
+    	prijmeni  Varchar(20) NOT NULL,
+    	email  Varchar(100) NOT NULL,
+    	Datum_narozeni Date NOT NULL,
+    	primary key (id)
+);
+
+/* 3) Vložení hodnot */
+INSERT INTO Z4088.studenti (krestni_jmeno, prijmeni, email, Datum_narozeni) 
+VALUES 
+('Katarina', 'Hendrichovska', 'katarina@gmail.com', '1994-06-13'),
+('Matej', 'Novotny', 'matej@gmail.com', '1993-05-12');
+
+/* 4) Vytvoření  tabulky studenti s parametry */
+Create Table Z4088.zakaznici(
+	zakaznik_id INT auto_increment,
+    	krestni_jmeno Varchar(20) NOT NULL,
+	prijmeni  Varchar(20) NOT NULL,
+    	email  Varchar(100) NOT NULL,
+    	primary key (zakaznik_id));
+
+/* 5) Vytvoření  tabulky studenti s parametry */
+Create Table Z4088.objednavky(
+	objednavky_id INT auto_increment,
+    datum_objednavky Date NOT NULL,
+    zakaznik_id INT,
+    castka float,
+    primary key (objednavky_id),
+    Foreign key (zakaznik_id) references Z4088.zakaznici(zakaznik_id)
+);
+
+/* 6) zobrazení sloupců v tabulce */
+SHOW COLUMNS FROM Z4088.objednavky;
+
+/* 7) přidání sloupečku do tabulky studenti */
+Alter Table  z4088.studenti ADD Garik VARCHAR(20);
+
+/* 8) přidání hodnot do sloupečku za zadané podmínky*/
+Update z4088.studenti SET Garik="XXX" where id=1;
+
+/* 9) smazání řádku za podmínky */
+Delete FROm z4088.studenti Where id=1;
+
+/* 11) přidání sloupečku do tabulky studenti */
+Alter Table  z4088.studenti ADD telefonni_kontakt VARCHAR(20);
+
+/* 12) úprava sloupečku na jiný datový typ*/
+Alter Table  z4088.studenti modify telefonni_kontakt INT;
+
+/* 13) úprava názvu sloupečku */
+Alter Table  z4088.studenti Change telefonni_kontakt mobil VARCHAR(20);
+
+/* 13) smazání sloupečku */
+Alter Table  z4088.studenti Drop column mobil;
+
+/* 14) zobrazení sloupců v tabulce */
+Show columns FROM z4088.studenti;
+
+/* 15) vytvoření tabulky, abychom ji mohli smazat :) */
+Create Table Z4088.TESTOVACI_TABULKA(
+	id INT auto_increment,
+    krestni_jmeno Varchar(20) NOT NULL,
+    prijmeni  Varchar(20) NOT NULL,
+    email  Varchar(100) NOT NULL,
+    Datum_narozeni Date NOT NULL,
+    primary key (id)
+);
+
+Drop Table Z4088.TESTOVACI_TABULKA;
+ 
+/* 16) Vytvoření nového uživatele */
+Create USER  'novy_uzivatel@localhost' identified by 'heslo123';
+
+/* 17) Zpřístupnění práv k tabulce - zde SELECT pro všechny tabulky */
+GRANT  SELECT ON * TO 'novy_uzivatel@localhost';
+
+/* 18) Odebrání práv k tabulce - zde SELECT pro všechny tabulky */
+Revoke Select ON * From 'novy_uzivatel@localhost';
+
+
+

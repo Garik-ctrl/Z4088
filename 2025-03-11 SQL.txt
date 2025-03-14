@@ -1,0 +1,203 @@
+/* 1) průměrná populace dle countryCode, seřazeno sestupně */ 
+SELECT CountryCode,avg(Population) 
+FROM world.city
+Group By CountryCode
+Order By avg(Population) DESC;
+
+/* 2) vypište všechny informace z tabulky City pro českou republiku */
+Select *
+From world.city
+Where CountryCode='CZE';
+
+/* 3) Seřaďte všechna města od největší populace po nejmenší populaci */
+Select Name, Population
+From world.city
+Order by Population DESC;
+
+/* 4) vypište všechna města, která mají populaci nižší než 50.000 a District<>"–" */
+Select Name, District
+From world.city
+Where Population<50000 and District<>"–";
+
+/*  Vypište continenty a jejich celkovou populaci */
+SELECT 
+	Continent
+	,SUM(Population)
+FROM world.country
+Where Continent<>'Antarctica'
+Group by Continent
+Order by SUM(Population) DESC
+
+/*  Vypište země, které jsou v regionu 'south' a v názvu mají 'bek' */
+SELECT * 
+FROM world.country
+Where  Region like 'South%' and Name like '%bek%'
+Order by Continent DESC,  LifeExpectancy ASC
+;
+
+/*  Vypište continent, region celkovou plochu 
+a průměrnou délku dožití větší než 60 let na evropském kontinentu*/
+SELECT 
+	Continent, 
+    	Region,
+    	sum(SurfaceArea) as 'Celková plocha',
+    	round(AVG(LifeExpectancy),2) as 'Průměrná délka dožití'
+FROM world.country
+Where Continent='Europe'
+Group by 
+	Continent, 
+    	Region
+Having round(AVG(LifeExpectancy),2)>60
+order by round(AVG(LifeExpectancy),2) DESC;
+
+/* 5) Vypište Zemi, která má nejmenší počet obyvatel */
+
+Select Name, Population
+FROM world.country
+Where Population >0
+Order by Population ASC
+Limit 1;
+
+/* 6) Vypište všechny země, které začínají na písmeno "A" */
+Select Name
+From world.country
+Where Name like "A%";
+
+/* 7) Počet zemí v tabulce country */
+Select count(Name)
+From world.country;
+
+/*8) Vypište země, které jsou na evropském kontinentu 
+a lifeExpentancy je větší než 70 */
+Select *
+From world.country
+Where Continent="Europe" and LifeExpectancy>70;
+
+/příklad vnořeného dotazu
+
+Select Name, population
+From world.country
+Where Population=
+	(Select Min(Population)
+	FROM world.country
+	);
+    
+/* 9) Počet měst v každé zemi */
+Select CountryCode, Count(Name) as 'Počet měst'
+From world.city
+group by CountryCode
+Order by count(Name) DESC;
+
+/* 10) Name, Maximální (populace) v dané zemi  */
+Select CountryCode,  Max(Population) as 'Počet obyvatel'
+From world.city
+group by CountryCode
+Order by count(Population) DESC;
+
+/*11) Všechna města, která mají v názvu "tan", seřazeno dle populace od největšího po nejmenší 
+a populace je větší než 50000 */
+
+Select CountryCode, Name, Population
+From world.city
+Where Name like '%tan%' and Population>50000
+Order by Population DESC;
+
+/*12 města, která mají počet obyvatel větší než 2.5M až do 3M */
+
+Select *
+From world.city
+Where Population>2500000 and Population<=3000000;
+
+/*2. způsob*/
+Select *
+From world.city
+Where Population Between 2500000 and 3000000;
+
+/*13 Vypiš záznamy o městech Praha, Brno, Ostrava */
+Select *
+From world.city
+Where Name="Praha" or Name="Brno" or Name="Ostrava";
+
+/* 2. způsob */
+Select *
+From world.city
+Where Name NOT IN ("Praha","Brno","Ostrava");
+
+/*14 použití DISTINCT */ 
+Select DISTINCT Continent
+From world.Country;
+
+/* 15 Ke každému státu vypsat informaci o počtu obyvatel a o jazycích, 
+které používají jako oficiální (Is Official) */
+
+Select 
+	A.Name,
+    	A.Population,
+    	B.Language, 
+    	B.IsOfficial, 
+    	B.Percentage
+FROM world.country A 
+LEFT JOIN world.countrylanguage B ON A.Code=B.CountryCode;
+
+
+/*
+16) Počet měst v každé zemi - název země, continent a počet měst v dané zemi
+17) Počet oficiálních jazyků v každé zemi - název země, continent a počet jazyků v dané zemi
+18) Země, kde se mluví více než 5 různými jazyky */
+
+'vypsat údaje z tabulky country, countrylanguage a city pro českou republiku */
+Select 
+	A.Name,
+    A.Population,
+    B.Language, 
+    B.IsOfficial, 
+    B.Percentage,
+    C.Name 
+FROM world.country A 
+LEFT JOIN world.countrylanguage B ON A.Code=B.CountryCode
+LEFT JOIN world.city C ON A.Code=C.CountryCode
+Where A.Code like 'CZE';
+
+
+Select 
+    B.Name AS 'stát', 
+	A.Name as 'Mesto'
+From world.country B Inner JOIN world.city A ON B.Code=A.CountryCode
+Where B.Name='Antarctica' ;
+
+/* příklad na outer join - v mysql neextistuje, 
+nahrazujeme right+left join a spojíme pomocí UNION ALL */
+
+Select 
+    B.Name AS 'stát', 
+	A.Name as 'Mesto'
+From world.country B Left JOIN world.city A ON B.Code=A.CountryCode
+Where A.Name is NUll
+
+UNION ALL
+
+Select 
+    B.Name AS 'stát', 
+	A.Name as 'Mesto'
+From world.country B Right JOIN world.city A ON B.Code=A.CountryCode;
+
+-----------------------------
+/*vypsat každý stát a k němu nejlidnatější město */
+
+With DleVelikost as (
+	Select 
+		CountryCode,
+        	Name, 
+		Population,
+		row_number() over (partition by CountryCode Order by Population DESC) as radek
+	From world.city)
+
+Select distinct
+    	C.Name,
+	B.Name, 
+	B.Population
+From world.city A 
+JOIN DleVelikost B ON A.CountryCode=B.CountryCode
+left JOIN world.country C ON A.CountryCode=C.Code
+Where B.radek=1;
+
