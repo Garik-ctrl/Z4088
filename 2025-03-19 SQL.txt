@@ -1,0 +1,123 @@
+SELECT * FROM sakila.film;
+
+/* Subqueries
+1) Název nejdelšíhu filmu v databázi */
+select Max(length) 
+From sakila.film;
+
+select title
+From sakila.film
+where length=185;
+
+/* Druhá možnost s vnořeným dotazem */
+select title
+From sakila.film
+where length=
+	(select Max(length) 
+	From sakila.film);
+
+/* 2) Vypsat všechny filmy, které mají nadprůměrný replacement_cost 
+2a) a rental_rate je také nadprůměrný */
+SELECT title, replacement_cost, rental_rate
+FROM film
+WHERE replacement_cost > (SELECT AVG(replacement_cost) FROM film)
+AND rental_rate > (SELECT AVG(rental_rate) FROM film)
+order by rental_rate desc;
+
+
+/* opakování IN a NOT IN */
+SELECT * 
+FROM sakila.film
+Where rating IN ("G","PG-13");
+/*Where rating="G" or rating="PG-13";*/
+
+SELECT * 
+FROM sakila.film
+Where rating NOT IN ("G","PG-13");
+/*Where rating<>"G" and rating<>"PG-13";*/
+
+/* 3) najít filmy, které nejsou v žádném invetáři */
+Select title, film_id
+From sakila.film
+Where film_id NOT IN 
+	(Select DISTINCT film_id
+	from sakila.inventory);
+
+/* 4) Vypsat zákazníky, kteří si nikdy nic nepůjčili*/
+Select first_name, last_name, customer_id
+FROM sakila.customer 
+Where customer_id NOT IN(
+	Select DISTINCT customer_id
+	FROm sakila.rental
+	order by customer_id);
+
+/* 5) Vypsat zákazníky, kteří zaplatili více než 10 dolarů a méně než 50 dolarů customer, payment */
+select customer_id, first_name,last_name 
+from sakila.customer
+where customer_id in 
+    (select customer_id
+		from sakila.payment
+		Group by customer_id
+		Having sum(amount)>10 and sum(amount)<500);
+
+/* CTE - virtuální tabulky
+5) Vypsat zákazníky, kteří zaplatili více než 10 dolarů a méně než 500 dolarů customer, payment */
+
+With suma_plateb AS (
+	/*slouží k výpočtu sumy za lístky*/
+	select customer_id, sum(amount) as TOTAL
+	from sakila.payment
+	Group by customer_id
+    )
+select A.customer_id, A.first_name, A.last_name, B.Total
+from sakila.customer A 
+JOIN suma_plateb B ON A.customer_id=B.customer_id
+where B.Total>10 and B.Total<500
+Order by B.Total DESC;
+
+/* 6) Vypsat zákazníky, kteří si nikdy nic nepůjčili*/
+With seznam_zakazniku AS (
+	Select DISTINCT *
+	FROm sakila.rental
+)
+Select A.first_name, A.last_name, A.customer_id, B.inventory_id
+FROM sakila.customer A JOIN seznam_zakazniku B ON A.customer_id=B.customer_id
+Where A.customer_id NOT IN(B.customer_id);
+
+/* 7) vytvoření view */ 
+create View sakila.Z4088_prvni_view as (
+	With suma_plateb AS (
+		/*slouží k výpočtu sumy za lístky*/
+		select customer_id, sum(amount) as TOTAL
+		from sakila.payment
+		Group by customer_id
+		)
+	select A.customer_id, A.first_name, A.last_name, B.Total
+	from sakila.customer A 
+	JOIN suma_plateb B ON A.customer_id=B.customer_id
+	where B.Total>10 and B.Total<500
+	Order by B.Total DESC
+        );
+
+/* 8) Vytvoření/úprava view */
+create OR replace View sakila.Z4088_prvni_view as (
+	select title
+	From sakila.film
+	where length=
+		(select Max(length) 
+		From sakila.film)
+	);
+
+/* druhá možnost */
+Alter View sakila.Z4088_prvni_view as (
+	select title
+	From sakila.film
+	where length=
+		(select Max(length) 
+		From sakila.film)
+	);
+
+/*9) smazání view */
+Drop View sakila.Z4088_prvni_view;
+
+
